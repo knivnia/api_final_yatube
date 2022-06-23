@@ -44,21 +44,30 @@ python manage.py runserver
 
 All posts:
 `api/v1/posts/`
+
 Post details:
 `api/v1/posts/{id}/`
+
 All post comments:
 `api/v1/posts/{post_id}/comments/`
+
 Comment details:
 `api/v1/posts/{post_id}/comments/{id}/`
+
 All groups:
 `api/v1/groups/`
+
 Group details:
 `api/v1/groups/{id}/`
+
 Your followings:
 `api/v1/follow/`
+
 Get JWT-token:
 `api/v1/jwt/create/`
+
 Refresh JWT-token:
 `api/v1/jwt/refresh/`
+
 Verify JWT-token:
 `api/v1/jwt/verify/`
