@@ -1,7 +1,16 @@
 # Yatube API
-### Yatube -- Social network
+
+### Yatube - Social network
+
 ##### Description
+
 Yatube is the network where people can share their diaries, read each other diaries, follow, comment, create communities. Users can choose their unique URL, can be blocked for spam, edit their posts.
+
+##### Technologies
+
+- Python 3.7
+- Django 2.2.19
+- Django REST framework
 
 ### How to run the project:
 
@@ -43,31 +52,47 @@ python manage.py runserver
 ### How to use Yatube API
 
 All posts:
+
 `api/v1/posts/`
 
 Post details:
+
 `api/v1/posts/{id}/`
 
 All post comments:
+
 `api/v1/posts/{post_id}/comments/`
 
 Comment details:
+
 `api/v1/posts/{post_id}/comments/{id}/`
 
 All groups:
+
 `api/v1/groups/`
 
 Group details:
+
 `api/v1/groups/{id}/`
 
 Your followings:
+
 `api/v1/follow/`
 
 Get JWT-token:
+
 `api/v1/jwt/create/`
 
 Refresh JWT-token:
+
 `api/v1/jwt/refresh/`
 
 Verify JWT-token:
+
 `api/v1/jwt/verify/`
+
+
+### Author
+Kseniya Nivnya
+
+Moscow, 2022
