@@ -10,15 +10,15 @@ from .permissions import MethodsAndIsAdminUser, UserIsAuthor
 
 class PerformCreateMixin:
     def perform_create(self, serializer):
-        if isinstance(self, PostViewSet):
-            serializer.save(author=self.request.user)
-        elif isinstance(self, CommentViewSet):
+        roles = ('author', 'user', )
+        for role in roles:
+            if role in serializer.fields:
+                serializer.validated_data[role] = self.request.user
+        if 'post' in serializer.fields:
             post_id = self.kwargs.get('post_id')
             post = get_object_or_404(Post, id=post_id)
-            serializer.save(author=self.request.user, post=post)
-        else:
-            if serializer.is_valid():
-                serializer.save(user=self.request.user)
+            serializer.validated_data['post'] = post
+        serializer.save()
 
 
 class PostViewSet(PerformCreateMixin, viewsets.ModelViewSet):

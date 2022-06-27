@@ -53,5 +53,5 @@ class FollowSerializer(serializers.ModelSerializer):
                 queryset=Follow.objects.all(),
                 fields=('user', 'following')
             ),
-            SelfFollowValidator()
+            SelfFollowValidator(fields=('user', 'following'))
         ]
