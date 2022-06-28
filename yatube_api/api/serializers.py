@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 
 from posts.models import Comment, Follow, Group, Post, User
-from .validators import SelfFollowValidator
+from .validators import UniqueFieldValidator
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -53,5 +53,5 @@ class FollowSerializer(serializers.ModelSerializer):
                 queryset=Follow.objects.all(),
                 fields=('user', 'following')
             ),
-            SelfFollowValidator(fields=('user', 'following'))
+            UniqueFieldValidator(fields=('user', 'following'))
         ]

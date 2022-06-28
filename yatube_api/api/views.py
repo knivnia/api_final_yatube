@@ -10,14 +10,14 @@ from .permissions import MethodsAndIsAdminUser, UserIsAuthor
 
 class PerformCreateMixin:
     def perform_create(self, serializer):
-        roles = ('author', 'user', )
-        for role in roles:
-            if role in serializer.fields:
-                serializer.validated_data[role] = self.request.user
-        if 'post' in serializer.fields:
-            post_id = self.kwargs.get('post_id')
-            post = get_object_or_404(Post, id=post_id)
-            serializer.validated_data['post'] = post
+        current_user_field = type(self).__dict__.get('current_user_field')
+        if current_user_field is None:
+            raise NotImplementedError('current_user_field is not implemented!')
+        elif not hasattr(serializer.Meta.model, current_user_field):
+            raise AttributeError(f'Model {serializer.Meta.model} has'
+                                 f'no attribute {current_user_field}!')
+        else:
+            serializer.validated_data[current_user_field] = self.request.user
         serializer.save()
 
 
@@ -26,6 +26,7 @@ class PostViewSet(PerformCreateMixin, viewsets.ModelViewSet):
     serializer_class = serializers.PostSerializer
     permission_classes = [UserIsAuthor, ]
     pagination_class = LimitOffsetPagination
+    current_user_field = 'author'
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -37,10 +38,18 @@ class GroupViewSet(viewsets.ModelViewSet):
 class CommentViewSet(PerformCreateMixin, viewsets.ModelViewSet):
     serializer_class = serializers.CommentSerializer
     permission_classes = [UserIsAuthor, ]
+    current_user_field = 'author'
 
     def get_queryset(self):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
         return post.comments.all()
+
+    def perform_create(self, serializer):
+        serializer.validated_data['post'] = get_object_or_404(
+            Post,
+            id=self.kwargs.get('post_id')
+        )
+        super(CommentViewSet, self).perform_create(serializer)
 
 
 class FollowViewSet(PerformCreateMixin,
@@ -51,6 +60,7 @@ class FollowViewSet(PerformCreateMixin,
     permission_classes = [IsAuthenticated, ]
     filter_backends = (filters.SearchFilter, )
     search_fields = ('=user__username', '=following__username')
+    current_user_field = 'user'
 
     def get_queryset(self):
         return self.request.user.follower.all()
