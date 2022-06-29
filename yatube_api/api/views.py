@@ -9,15 +9,15 @@ from .permissions import MethodsAndIsAdminUser, UserIsAuthor
 
 
 class PerformCreateMixin:
+    current_user_field = None
+
     def perform_create(self, serializer):
-        current_user_field = type(self).__dict__.get('current_user_field')
-        if current_user_field is None:
+        if self.current_user_field is None:
             raise NotImplementedError('current_user_field is not implemented!')
-        elif not hasattr(serializer.Meta.model, current_user_field):
+        if not hasattr(serializer.Meta.model, self.current_user_field):
             raise AttributeError(f'Model {serializer.Meta.model} has'
-                                 f'no attribute {current_user_field}!')
-        else:
-            serializer.validated_data[current_user_field] = self.request.user
+                                 f'no attribute {self.current_user_field}!')
+        serializer.validated_data[self.current_user_field] = self.request.user
         serializer.save()
 
 
