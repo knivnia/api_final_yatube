@@ -93,6 +93,6 @@ Verify JWT-token:
 
 
 ### Author
-Kseniya Nivnya
+Kseniia Nivnia
 
-Moscow, 2022
+June 2022
